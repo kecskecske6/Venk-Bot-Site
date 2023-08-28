@@ -49,7 +49,7 @@ app.use(passport.initialize());
 
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, '../venk-bot-site/dist/venk-bot-site')));
+app.use(express.static(path.join(__dirname, '../Venk-Bot-Site/dist/venk-bot-site')));
 
 app.use('/api', router);
 
