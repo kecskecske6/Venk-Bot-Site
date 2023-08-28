@@ -54,7 +54,7 @@ app.use(express.static(path.join(__dirname, '../venk-bot-site/dist/venk-bot-site
 app.use('/api', router);
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../venk-bot-site/dist/venk-bot-site/index.html'));
+    res.sendFile(path.join(__dirname + '/../Venk-Bot-Site/dist/venk-bot-site/index.html'));
 });
 
 const database: Db = new Db(client, process.env.DBNAME == undefined ? '' : process.env.DBNAME);
