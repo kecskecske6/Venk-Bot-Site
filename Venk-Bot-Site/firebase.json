@@ -1,0 +1,12 @@
+{
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": [
+    {
+      "target": "Venk-Bot-Site",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

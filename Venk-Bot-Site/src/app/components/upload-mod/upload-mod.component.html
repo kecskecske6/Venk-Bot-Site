@@ -1,0 +1,8 @@
+<label for="file">Choose file(s)</label>
+<input type="file" name="file" id="file" #upload multiple webkitdirectory mozdirectory style="display: none;">
+
+<div class="file-upload">
+  <button color="primary" class="btn btn-success" (click)="upload.click()">Select file</button>
+</div>
+
+<button type="submit" (click)="uploadFile(upload)">Upload</button>
