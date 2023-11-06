@@ -8,19 +8,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   return new Observable<boolean>(obs => {
-    userService.getUser().subscribe({
-      next: result => {
-        if (result != null) obs.next(true);
-        else {
-          router.navigate(['/']);
-          obs.next(false);
-        }
-      },
-      error: err => {
-        console.log(err);
-        router.navigate(['/']);
-        obs.next(false);
-      }
-    });
+
   });
 };

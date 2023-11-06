@@ -1,8 +1,17 @@
-<label for="file">Choose file(s)</label>
-<input type="file" name="file" id="file" #upload multiple webkitdirectory mozdirectory style="display: none;">
-
-<div class="file-upload">
-  <button color="primary" class="btn btn-success" (click)="upload.click()">Select file</button>
-</div>
-
+<label for="file" class="btn btn-success">Choose file(s)</label>
+<input type="file" name="file" id="file" #upload multiple style="display: none;" (input)="writeFileInfo(upload)">
+<table>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      File size
+    </th>
+  </tr>
+  <tr *ngFor="let file of files">
+    <td>{{file.name}}</td>
+    <td>{{file.size}}</td>
+  </tr>
+</table>
 <button type="submit" (click)="uploadFile(upload)">Upload</button>

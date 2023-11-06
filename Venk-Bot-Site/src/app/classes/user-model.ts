@@ -1,8 +1,11 @@
 import { User } from "../interfaces/user";
 
 export class UserModel implements User {
-  userId = '';
+  email = '';
   username = '';
+  password = '';
   avatar = '';
-  guilds = [];
+  role = '';
+  token = '';
+  validated = false;
 }

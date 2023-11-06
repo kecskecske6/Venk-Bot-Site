@@ -1,12 +1,8 @@
 import express from 'express';
-import auth from './auth';
-import discord from './discord';
-import server from './server';
+import user from './user';
 
 const router = express();
 
-router.use('/auth', auth);
-router.use('/discord', discord);
-router.use('/server', server);
+router.use('/user', user);
 
 export default router;

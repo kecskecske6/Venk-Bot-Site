@@ -5,10 +5,8 @@ import 'dotenv/config';
 import { AddressInfo } from 'net';
 import path from 'path';
 import router from './routes';
-import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import './strategies/discord';
 
 const app = express();
 
@@ -44,10 +42,6 @@ app.use(session({
         mongoUrl: process.env.MONGO == undefined ? '' : process.env.MONGO
     })
 }));
-
-app.use(passport.initialize());
-
-app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, '../Venk-Bot-Site/dist/venk-bot-site')));
 

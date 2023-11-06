@@ -1,6 +1,9 @@
 export interface User {
-  userId: string;
+  email: string;
   username: string;
-  avatar: string | null;
-  guilds: any[] | undefined;
+  password: string;
+  avatar: string;
+  role: string;
+  token: string;
+  validated: boolean;
 }
