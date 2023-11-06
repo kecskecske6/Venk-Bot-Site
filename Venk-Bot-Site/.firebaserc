@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "venk-bot-67386"
+  },
+  "targets": {
+    "venk-bot-67386": {
+      "hosting": {
+        "Venk-Bot-Site": [
+          "venkbot"
+        ]
+      }
+    }
+  }
+}

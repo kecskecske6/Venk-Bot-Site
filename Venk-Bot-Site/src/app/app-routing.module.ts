@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
-import { GuildComponent } from './components/guild/guild.component';
-import { guildGuard } from './guards/guild.guard';
+import { UploadModComponent } from './components/upload-mod/upload-mod.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { ValidateComponent } from './components/validate/validate.component';
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'dashboard/:id', component: GuildComponent, canActivate: [authGuard, guildGuard] }
+  { path: 'mods/upload', component: UploadModComponent, canActivate: [authGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'validate/:token', component: ValidateComponent }
 ];
 
 @NgModule({
