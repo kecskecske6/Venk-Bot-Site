@@ -8,5 +8,5 @@ export const environment = {
     authDomain: 'venk-bot-67386.firebaseapp.com',
     messagingSenderId: '1079606264789',
   },
-  backend: 'http://localhost:8080/api'
+  backend: 'https://venkbot-6ab10a8ce669.herokuapp.com/api'
 };
