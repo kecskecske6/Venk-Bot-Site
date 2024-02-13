@@ -1,6 +1,9 @@
 <h2>Login</h2>
-<label for="username">Username</label>
-<input type="text" name="username" id="username" class="form-control">
-<label for="password">Password</label>
-<input type="password" name="password" id="password" class="form-control">
-<button type="submit" class="btn btn-success">Login</button>
+<form>
+  <label for="username">Username</label>
+  <input type="text" name="username" id="username" class="form-control" [(ngModel)]="loginDto.username">
+  <label for="password">Password</label>
+  <input type="password" name="password" id="password" class="form-control" [(ngModel)]="loginDto.password">
+  <span id="validation" style="color: red; display: none;">Invalid username or password!</span>
+  <button type="submit" class="btn btn-success mt-2" (click)="login()">Login</button>
+</form>

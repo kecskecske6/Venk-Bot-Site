@@ -1,6 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Storage, ref, uploadBytesResumable } from '@angular/fire/storage';
+import { Component, OnInit } from '@angular/core';
 import { FileModel } from 'src/app/classes/file-model';
+import { GameModel } from 'src/app/classes/game-model';
+import { ModModel } from 'src/app/classes/mod-model';
+import { GameService } from 'src/app/services/game.service';
+import { ModService } from 'src/app/services/mod.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-upload-mod',
@@ -9,25 +13,44 @@ import { FileModel } from 'src/app/classes/file-model';
 })
 export class UploadModComponent implements OnInit {
 
-  private storage: Storage = inject(Storage);
-
   files: FileModel[] = [];
 
-  ngOnInit(): void {
+  games: GameModel[] = [];
 
+  mod: ModModel = new ModModel();
+
+  constructor(private modService: ModService, private gameService: GameService) { }
+
+  ngOnInit(): void {
+    this.getGames();
+    this.getUser();
+  }
+
+  getGames(): void {
+    this.gameService.getAll().subscribe({
+      next: result => this.games = result,
+      error: err => console.log(err)
+    });
+  }
+
+  getUser(): void {
+    if (window.sessionStorage.getItem('user')) {
+      const userFromSession = JSON.parse(window.sessionStorage.getItem('user') as string);
+      this.mod.authorId = userFromSession.id;
+    }
   }
 
   uploadFile(input: HTMLInputElement): void {
     if (!input.files) return;
 
     const files: FileList = input.files;
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files.item(i);
-      if (file) {
-        const storageRef = ref(this.storage, file.name);
-        uploadBytesResumable(storageRef, file);
-      }
+    const file = files.item(0);
+    if (file) {
+      this.mod.uploadDate = new Date();
+      this.modService.uploadFile(this.mod, file).subscribe({
+        next: result => console.log(result),
+        error: err => console.log(err)
+      });
     }
   }
 

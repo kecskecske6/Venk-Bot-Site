@@ -15,7 +15,8 @@ export class RegisterComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
-
+    if (window.sessionStorage.getItem('user'))
+      this.router.navigate(['/']);
   }
 
   register(): void {

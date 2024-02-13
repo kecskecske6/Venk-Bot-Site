@@ -1,19 +1,19 @@
 import express from 'express';
-import database from '..';
-import { User } from '../interfaces';
+import supabase from '..';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
+import { sign, verify } from 'jsonwebtoken';
 
 const router = express();
 
 router.post('/register', async (req, res) => {
     const messages: any[] = [];
-    const userEmail = await database.collection<User>('users').findOne({ email: req.body.email });
-    const username = await database.collection<User>('users').findOne({ username: req.body.username });
-    if (userEmail)
+    const emails = await supabase.from('users').select('email');
+    const usernames = await supabase.from('users').select('username');
+    if (emails.count as number > 0)
         messages.push({ message: 'Email is already taken!', field: 'email' });
-    if (username)
+    if (usernames.count as number > 0)
         messages.push({ message: 'Username is already taken!', field: 'username' });
     if (req.body.password != req.body.passwordAgain)
         messages.push({ message: 'The password and password again fields do not match!', field: 'password-again' });
@@ -30,12 +30,11 @@ router.post('/register', async (req, res) => {
     else {
         let characters = '0123456789abcdef';
         let token = '';
-        const users = await database.collection<User>('users').find().toArray();
-        const tokens = users.map(u => u.token);
+        const users = await supabase.from('users').select('token');
+        const tokens = users.data?.map(u => u.token) as string[];
         do {
-            for (let i = 0; i < 32; i++) {
+            for (let i = 0; i < 32; i++)
                 token += characters[Math.floor(Math.random() * characters.length)];
-            }
         } while (tokens.includes(token))
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -59,18 +58,62 @@ router.post('/register', async (req, res) => {
             }
         });
         const encryptedPassword = await bcrypt.hash(req.body.password, 10);
-        await database.collection<User>('users').insertOne({ email: req.body.email, username: req.body.username, password: encryptedPassword, avatar: '', role: 'User', token, validated: false });
+        const role = await supabase.from('roles').select('id').eq('name', 'User');
+        const roleId = role.data?.map(r => r.id).shift() as number;
+        await supabase.from('users').insert({ email: req.body.email, password: encryptedPassword, roleId, token, username: req.body.username, validated: false });
         res.send({ success: true });
     }
 });
 
 router.get('/validate/:token', async (req, res) => {
-    const user = await database.collection<User>('users').findOne({ token: req.params.token });
-    if (!user)
+    const user = await supabase.from('users').select().eq('token', req.params.token);
+    const userData = user.data;
+    if (userData?.length as number < 1)
         res.send(false);
     else {
-        await database.collection<User>('users').updateOne({ token: req.params.token }, { $set: { validated: true } });
+        await supabase.from('users').update({ validated: true }).eq('token', req.params.token);
         res.send(true);
+    }
+});
+
+router.post('/login', async (req, res) => {
+    const user = await supabase.from('users').select().eq('username', req.body.username);
+    const userData = user.data;
+    if (userData?.length as number < 1)
+        res.send({ sucess: false });
+    else {
+        const firstUser = userData?.shift();
+        const passwordMatch = await bcrypt.compare(req.body.password, firstUser?.password as string);
+        if (!passwordMatch)
+            res.send({ sucess: false });
+        else {
+            if (!firstUser?.validated as boolean)
+                res.send({ success: false });
+            else {
+                const token = sign({ id: firstUser?.id }, process.env.JWT_SECRET as string, { algorithm: 'HS256', allowInsecureKeySizes: true, expiresIn: 86400 });
+                req.session.user = { token };
+                res.send({ success: true, id: firstUser?.id as number, username: firstUser?.username as string, email: firstUser?.email as string, avatar: firstUser?.avatar == null ? null : firstUser.avatar as string });
+            }
+        }
+    }
+});
+
+router.get('', async (req, res) => {
+    const value = req.session.user;
+    if (!value)
+        res.send(false);
+    else {
+        let userId = 0;
+        verify(value?.token, process.env.JWT_SECRET as string, (err: any, decoded: any) => {
+            if (err)
+                res.send(false);
+            userId = decoded.id;
+        });
+        const user = await supabase.from('users').select().eq('id', userId);
+        if (user)
+            res.send(true);
+        else
+            res.send(false);
     }
 });
 

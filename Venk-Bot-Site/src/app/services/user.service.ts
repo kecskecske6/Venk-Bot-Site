@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { RegisterResponseDTO } from '../classes/DTOs/register-response-dto';
 import { RegisterDTO } from '../classes/DTOs/register-dto';
+import { LoginDTO } from '../classes/DTOs/login-dto';
+import { LoginResponseDTO } from '../classes/DTOs/login-response-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,14 @@ export class UserService {
 
   validate(token: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.backend}/user/validate/${token}`);
+  }
+
+  login(user: LoginDTO): Observable<LoginResponseDTO> {
+    return this.http.post<LoginResponseDTO>(`${environment.backend}/user/login`, user);
+  }
+
+  getUser(): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.backend}/user`);
   }
 
 }

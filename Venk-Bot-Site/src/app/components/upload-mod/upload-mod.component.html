@@ -1,5 +1,23 @@
-<label for="file" class="btn btn-success">Choose file(s)</label>
-<input type="file" name="file" id="file" #upload multiple style="display: none;" (input)="writeFileInfo(upload)">
+<form>
+  <label for="file" class="btn btn-success">Choose file</label>
+  <input type="file" name="file" id="file" #upload style="display: none;" (input)="writeFileInfo(upload)">
+  <br>
+  <label for="name">Mod name</label>
+  <input type="text" name="name" id="name" [(ngModel)]="mod.name">
+  <br>
+  <label for="description">Mod description</label>
+  <textarea name="description" id="description" cols="30" rows="10" [(ngModel)]="mod.description"></textarea>
+  <br>
+  <!--<label for="image">Mod thumbnail</label>
+  <input type="file" name="image" id="image" accept="image/png, image/jpeg" #image>
+  <br>-->
+  <label for="game">Game</label>
+  <select name="game" id="game" [(ngModel)]="mod.gameId">
+    <option *ngFor="let game of games" [value]="game.id">{{game.name}}</option>
+  </select>
+  <br>
+  <button type="submit" class="btn btn-success" (click)="uploadFile(upload)">Submit and upload</button>
+</form>
 <table>
   <tr>
     <th>
@@ -14,4 +32,3 @@
     <td>{{file.size}}</td>
   </tr>
 </table>
-<button type="submit" (click)="uploadFile(upload)">Upload</button>

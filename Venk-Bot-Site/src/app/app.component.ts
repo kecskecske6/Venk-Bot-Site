@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment.development';
 import { UserModel } from './classes/user-model';
-import { UserService } from './services/user.service';
-import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +11,24 @@ export class AppComponent {
 
   user: UserModel | null = null;
 
-  constructor(private userService: UserService, private cookieService: CookieService, private router: Router) {
+  constructor() {
+    if (!this.user) this.getUser();
+  }
+
+  logout(): void {
+    this.user = null;
+    window.sessionStorage.removeItem('user');
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    window.location.reload();
+  }
+
+  getUser(): void {
+    if (window.sessionStorage.getItem('user')) {
+      this.user = new UserModel();
+      const userFromSession = JSON.parse(window.sessionStorage.getItem('user') as string);
+      this.user.username = userFromSession.username;
+      this.user.avatar = userFromSession.avatar;
+    }
   }
 
 }

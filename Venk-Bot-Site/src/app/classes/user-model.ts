@@ -4,8 +4,6 @@ export class UserModel implements User {
   email = '';
   username = '';
   password = '';
-  avatar = '';
+  avatar = null;
   role = '';
-  token = '';
-  validated = false;
 }

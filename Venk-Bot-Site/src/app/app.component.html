@@ -16,9 +16,10 @@
         <button class="btn btn-outline-success ms-2" routerLink="/register">Register</button>
       </div>
       <div *ngIf="user">
-        <a id="clickable-username" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"><img [src]="user.avatar" width="24" height="24" alt="User avatar">&nbsp;{{user.username}}</a>
+        <a id="clickable-username" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"><img
+            [src]="user.avatar ?? 'https://cdn.discordapp.com/embed/avatars/0.png'" width="24" height="24" alt="User avatar">&nbsp;{{user.username}}</a>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-          <li id="logout-button" class="dropdown-item">Logout</li>
+          <li id="logout-button" class="dropdown-item" (click)="logout()">Logout</li>
         </ul>
       </div>
     </div>
